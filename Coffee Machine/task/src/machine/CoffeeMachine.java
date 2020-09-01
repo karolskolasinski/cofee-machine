@@ -13,52 +13,46 @@ public class CoffeeMachine {
         int cups = 9;
         int money = 550;
 
+        int espressoWater = 250;
+        int espressoMilk = 0;
+        int espressoBeans = 16;
+
+        int cappuccinoWater = 350;
+        int cappuccinoMilk = 75;
+        int cappuccinoBeans = 20;
+
+        int latteWater = 200;
+        int latteMilk = 100;
+        int latteBeans = 12;
 
         while (true) {
             System.out.println("Write action (buy, fill, take, remaining, exit):");
-            String action = scanner.next();
-            switch (action) {
+            switch (scanner.next()) {
                 case "buy":
                     System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu:");
-                    String buyOption = scanner.next();
-                    switch (buyOption) {
+                    switch (scanner.next()) {
                         case "1":
-                            int espressoWater = 250;
-                            int espressoMilk = 0;
-                            int espressoCoffeeBeans = 16;
-                            boolean enoughForEspresso = isEnoughResources(water, milk, beans, cups, espressoWater, espressoMilk, espressoCoffeeBeans);
-                            if (enoughForEspresso) {
-                                System.out.println("I have enough resources, making you a coffee!");
+                            if (isEnoughResources(water, milk, beans, cups, espressoWater, espressoMilk, espressoBeans)) {
                                 water -= espressoWater;
-                                beans -= espressoCoffeeBeans;
+                                beans -= espressoBeans;
                                 cups -= 1;
                                 money += 4;
                             }
                             break;
                         case "2":
-                            int cappuccinoWater = 350;
-                            int cappuccinoMilk = 75;
-                            int cappuccinoCoffeeBeans = 20;
-                            boolean enoughForCappuccino = isEnoughResources(water, milk, beans, cups, cappuccinoWater, cappuccinoMilk, cappuccinoCoffeeBeans);
-                            if (enoughForCappuccino) {
-                                System.out.println("I have enough resources, making you a coffee!");
+                            if (isEnoughResources(water, milk, beans, cups, cappuccinoWater, cappuccinoMilk, cappuccinoBeans)) {
                                 water -= cappuccinoWater;
                                 milk -= cappuccinoMilk;
-                                beans -= cappuccinoCoffeeBeans;
+                                beans -= cappuccinoBeans;
                                 cups -= 1;
                                 money += 7;
                             }
                             break;
                         case "3":
-                            int latteWater = 200;
-                            int latteMilk = 100;
-                            int latteCoffeeBeans = 12;
-                            boolean enoughForLatte = isEnoughResources(water, milk, beans, cups, latteWater, latteMilk, latteCoffeeBeans);
-                            if (enoughForLatte) {
-                                System.out.println("I have enough resources, making you a coffee!");
+                            if (isEnoughResources(water, milk, beans, cups, latteWater, latteMilk, latteBeans)) {
                                 water -= latteWater;
                                 milk -= latteMilk;
-                                beans -= latteCoffeeBeans;
+                                beans -= latteBeans;
                                 cups -= 1;
                                 money += 6;
                             }
@@ -83,10 +77,19 @@ public class CoffeeMachine {
 
                     break;
                 case "take":
-                    money = getMoney(money);
+                    System.out.println("I gave you $" + money);
+                    money = 0;
                     break;
                 case "remaining":
-                    machineStatus(water, milk, beans, cups, money);
+                    System.out.println(String.format(
+                            "The coffee machine has:\n" +
+                                    "%d of water\n" +
+                                    "%d of milk\n" +
+                                    "%d of coffee beans\n" +
+                                    "%d of disposable cups\n" +
+                                    "$%d of money\n",
+                            water, milk, beans, cups, money
+                    ));
                     break;
                 case "exit":
                     System.exit(0);
@@ -95,45 +98,31 @@ public class CoffeeMachine {
             }
         }
 
-
-    }
-
-    private static int getMoney(int money) {
-        System.out.println("I gave you $" + money);
-        money = 0;
-        return money;
     }
 
     private static boolean isEnoughResources(int water, int milk, int coffeeBeans, int disposableCups, int needWater, int needMilk, int needCoffeeBeans) {
-        boolean enoughResources = true;
+        if (disposableCups <= 1) {
+            System.out.println("Sorry, not enough disposable cups!");
+            return false;
+        }
+
         if (needWater >= water) {
             System.out.println("Sorry, not enough water!");
-            enoughResources = false;
+            return false;
         }
 
         if (needMilk >= milk) {
             System.out.println("Sorry, not enough milk!");
-            enoughResources = false;
+            return false;
         }
 
         if (needCoffeeBeans >= coffeeBeans) {
             System.out.println("Sorry, not enough coffee beans!");
-            enoughResources = false;
+            return false;
         }
 
-        if (disposableCups <= 1) {
-            System.out.println("Sorry, not enough disposable cups!");
-            enoughResources = false;
-        }
-        return enoughResources;
+        System.out.println("I have enough resources, making you a coffee!");
+        return true;
     }
 
-    private static void machineStatus(int water, int milk, int coffeeBeans, int disposableCups, int money) {
-        System.out.println("The coffee machine has:");
-        System.out.println(water + " of water");
-        System.out.println(milk + " of milk");
-        System.out.println(coffeeBeans + " of coffee beans");
-        System.out.println(disposableCups + " of disposable cups");
-        System.out.println("$" + money + " of money\n");
-    }
 }
