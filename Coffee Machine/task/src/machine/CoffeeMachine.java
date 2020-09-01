@@ -1,5 +1,7 @@
 package machine;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class CoffeeMachine {
@@ -27,9 +29,23 @@ public class CoffeeMachine {
         int need = scanner.nextInt();
 
 
+        List<Integer> coffee = new ArrayList<>();
+        coffee.add(water / 200);
+        coffee.add(milk / 50);
+        coffee.add(coffeeBeans / 15);
 
+        int min = coffee.stream().min(Integer::compareTo).orElse(0);
 
-
+        if (min < need) {
+            System.out.println(String.format("No, I can make only %d cup(s) of coffee", min));
+        } else if (min == need) {
+            System.out.println("Yes, I can make that amount of coffee");
+        } else {
+            System.out.println(String.format(
+                    "Yes, I can make that amount of coffee (and even %d more than that)",
+                    min - need)
+            );
+        }
 
     }
 }
