@@ -1,0 +1,5 @@
+.idea/
+classes/
+target/
+*.iml
+course-remote-info.yaml
